@@ -42,17 +42,20 @@ fn extract_frontmatter(markdown: &str) -> Document {
     {
         // Split the content at the separator
         let lines: Vec<&str> = markdown.lines().collect();
+
+        // `frontmatter` and `body` should be references into the original `markdown` string, rather than joining the lines together AI!
         let frontmatter = lines[..separator_pos].join("\n");
         let body = lines[(separator_pos + 1)..].join("\n");
+
         Document {
-            frontmatter: Box::leak(frontmatter.into_boxed_str()),
-            body: Box::leak(body.into_boxed_str()),
+            frontmatter: frontmatter,
+            body: body,
         }
     } else {
         // No separator found
         Document {
             frontmatter: "",
-            body: Box::leak(markdown.to_string().into_boxed_str()),
+            body: markdown,
         }
     }
 }
