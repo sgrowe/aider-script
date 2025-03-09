@@ -33,11 +33,11 @@ struct Document<'a> {
 }
 
 fn extract_frontmatter(markdown: &str) -> Document {
-    // Try to find a separator line with any number of dashes (at least 3)
+    // Try to find a separator line with 4 or more dashes
     if let Some(separator_pos) = markdown
         .lines()
         .enumerate()
-        .find(|(_, line)| line.trim().chars().all(|c| c == '-') && line.trim().len() >= 3)
+        .find(|(_, line)| line.trim().chars().all(|c| c == '-') && line.trim().len() >= 4)
         .map(|(idx, _)| idx)
     {
         // Split the content at the separator
@@ -152,15 +152,15 @@ mod tests {
 
     #[test]
     fn test_create_aider_command_with_minimum_dashes() {
-        let message = "----\nfrontmatter\n---\nbody content";
+        let message = "frontmatter\n---\nbody content";
         let cmd = create_aider_command(message);
 
         // Convert args to a Vec for easier testing
         let args: Vec<_> = cmd.get_args().collect();
 
-        // Check that separator with 3 dashes works
+        // Check that separator with 3 dashes is ignored (not enough dashes)
         assert_eq!(args.len(), 2);
         assert_eq!(args[0], "-m");
-        assert_eq!(args[1].to_string_lossy(), "body content");
+        assert_eq!(args[1].to_string_lossy(), "frontmatter\n---\nbody content");
     }
 }
