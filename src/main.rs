@@ -43,13 +43,14 @@ fn extract_frontmatter(markdown: &str) -> Document {
         // Split the content at the separator
         let lines: Vec<&str> = markdown.lines().collect();
 
-        // `frontmatter` and `body` should be references into the original `markdown` string, rather than joining the lines together AI!
-        let frontmatter = lines[..separator_pos].join("\n");
-        let body = lines[(separator_pos + 1)..].join("\n");
-
+        // Find the start and end indices for frontmatter and body
+        let frontmatter_start = 0;
+        let frontmatter_end = lines[..separator_pos].join("\n").len();
+        let body_start = markdown.find(lines[separator_pos + 1]).unwrap_or(0);
+        
         Document {
-            frontmatter: frontmatter,
-            body: body,
+            frontmatter: &markdown[frontmatter_start..frontmatter_end],
+            body: &markdown[body_start..],
         }
     } else {
         // No separator found
