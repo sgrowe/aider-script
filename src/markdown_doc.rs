@@ -1,3 +1,5 @@
+use crate::str::substr_index_within_parent;
+
 #[derive(Debug)]
 pub struct MarkdownDoc<'a> {
     pub frontmatter: &'a str,
@@ -21,18 +23,20 @@ impl<'a> MarkdownDoc<'a> {
             }
 
             if fm_start.is_none() {
-                if let Some(line) = lines.next() {
-                    let offset = (line.as_ptr() as usize) - markdown.as_ptr() as usize;
+                // Start of front matter
 
-                    fm_start = Some(offset);
-                }
+                fm_start = lines
+                    .next()
+                    .map(|l| substr_index_within_parent(l, markdown));
             } else {
-                let offset = (line.as_ptr() as usize) - markdown.as_ptr() as usize;
+                // End of front matter
+
+                let offset = substr_index_within_parent(line, markdown);
 
                 fm_end = Some(offset);
                 body_start = lines
                     .next()
-                    .map(|l| (l.as_ptr() as usize) - markdown.as_ptr() as usize);
+                    .map(|l| substr_index_within_parent(l, markdown));
 
                 break;
             }

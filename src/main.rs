@@ -6,6 +6,7 @@ use command_template::CommandTemplate;
 mod aider_command;
 mod command_template;
 mod markdown_doc;
+mod str;
 
 fn main() {
     let script_file_path = "src/fixtures/01_args.md";
