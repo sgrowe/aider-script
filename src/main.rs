@@ -11,7 +11,6 @@ fn main() {
 }
 
 fn create_aider_command(markdown: &str) -> Command {
-    // `markdown` will be a markdown document with a frontmatter section enclosed between two lines made entirely of dashes (e.g. `----`)
     let mut cmd = Command::new("aider");
 
     let document = extract_frontmatter(markdown);
@@ -33,42 +32,37 @@ struct Document<'a> {
 }
 
 fn extract_frontmatter(markdown: &str) -> Document {
-    // Try to find a separator line with 4 or more dashes
-    if let Some(separator_pos) = markdown
-        .lines()
-        .enumerate()
-        .find(|(_, line)| line.trim().chars().all(|c| c == '-') && line.trim().len() >= 4)
-        .map(|(idx, _)| idx)
-    {
-        // Split the content at the separator
-        let lines: Vec<&str> = markdown.lines().collect();
+    // `markdown` will be a markdown document with a frontmatter section enclosed between two lines of three dashes
 
-        // Calculate the correct indices for frontmatter and body
-        let frontmatter_start = 0;
-        let frontmatter_end = lines[..separator_pos].join("\n").len();
+    let lines = markdown.lines();
 
-        // Find the position after the separator line
-        let separator_line = lines[separator_pos];
-        let separator_pos_in_str =
-            markdown.find(separator_line).unwrap_or(0) + separator_line.len();
+    let mut front_matter_start = None;
+    let mut front_matter_end = None;
 
-        // Find the start of the body (skipping any newlines after the separator)
-        let body_start =
-            if let Some(pos) = markdown[separator_pos_in_str..].find(|c: char| c != '\n') {
-                separator_pos_in_str + pos
+    for line in lines {
+        if line == "---" {
+            let offset = line.as_ptr() as usize - markdown.as_ptr() as usize;
+
+            if front_matter_start.is_none() {
+                front_matter_start = Some(offset);
             } else {
-                separator_pos_in_str
-            };
-
-        Document {
-            frontmatter: &markdown[frontmatter_start..frontmatter_end],
-            body: &markdown[body_start..],
+                front_matter_end = Some(offset);
+                break;
+            }
         }
-    } else {
-        // No separator found
-        Document {
-            frontmatter: "",
-            body: markdown,
+    }
+
+    match front_matter_start.zip(front_matter_end) {
+        Some((s, e)) => Document {
+            frontmatter: &markdown[s..e],
+            body: &markdown[e..],
+        },
+        None => {
+            // No front matter found
+            Document {
+                frontmatter: "",
+                body: markdown,
+            }
         }
     }
 }
