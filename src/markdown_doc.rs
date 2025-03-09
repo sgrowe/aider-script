@@ -41,3 +41,5 @@ impl<'a> MarkdownDoc<'a> {
         }
     }
 }
+
+// Add a unit test that reads in `src/fixtures/01_args.md`, calls MarkdownDoc::parse on it, and asserts that the returned frontmatter is `args: \n  - FUNCTION` AI!
