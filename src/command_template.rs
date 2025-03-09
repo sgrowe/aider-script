@@ -5,7 +5,7 @@ use crate::markdown_doc::MarkdownDoc;
 
 #[derive(Debug)]
 pub struct CommandTemplate<'a> {
-    argument_names: Vec<&'a str>,
+    argument_names: Vec<String>,
     template_body: &'a str,
 }
 
@@ -14,14 +14,14 @@ impl<'a> CommandTemplate<'a> {
         let MarkdownDoc { frontmatter, body } = MarkdownDoc::parse(s);
 
         let mut argument_names = Vec::new();
-        
-        if !frontmatter.is_empty() {
+
+        if !frontmatter.trim().is_empty() {
             if let Ok(docs) = YamlLoader::load_from_str(frontmatter) {
                 if !docs.is_empty() {
                     if let Some(args) = docs[0]["args"].as_vec() {
                         for arg in args {
                             if let Some(arg_str) = arg.as_str() {
-                                argument_names.push(arg_str);
+                                argument_names.push(arg_str.into());
                             }
                         }
                     }
