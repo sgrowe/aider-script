@@ -15,4 +15,24 @@ impl AiderCommand {
     }
 }
 
-// Add a unit test for `to_command` AI!
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_to_command() {
+        let message = "Test message";
+        let command = AiderCommand { message: message.to_string() };
+        
+        let cmd = command.to_command();
+        
+        // Check that the program is "aider"
+        assert_eq!(cmd.get_program(), "aider");
+        
+        // Check that the args are ["-m", "Test message"]
+        let args: Vec<_> = cmd.get_args().collect();
+        assert_eq!(args.len(), 2);
+        assert_eq!(args[0], "-m");
+        assert_eq!(args[1], "Test message");
+    }
+}
