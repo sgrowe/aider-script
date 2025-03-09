@@ -17,6 +17,10 @@ struct Args {
     /// Template file, use '-' for stdin
     #[clap(value_parser, default_value = "-")]
     template: Input,
+
+    /// Outputs the message that would be passed to aider and then exits
+    #[arg(short, long)]
+    preview_message: bool,
 }
 
 fn main() -> anyhow::Result<()> {
