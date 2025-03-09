@@ -28,8 +28,7 @@ fn create_aider_command(markdown: &str) -> Command {
             } else {
                 None
             }
-        })
-        .nth(0)
+        }).next()
         .map_or_else(
             || vec![markdown.to_string()],
             |separator_idx| {
