@@ -6,7 +6,7 @@ pub struct AiderCommand {
 }
 
 impl AiderCommand {
-    pub fn to_command(&self) -> Command {
+    pub fn to_shell_command(&self) -> Command {
         let mut cmd = Command::new("aider");
 
         cmd.arg("-m").arg(self.message.trim());
@@ -22,13 +22,15 @@ mod tests {
     #[test]
     fn test_to_command() {
         let message = "Test message";
-        let command = AiderCommand { message: message.to_string() };
-        
-        let cmd = command.to_command();
-        
+        let command = AiderCommand {
+            message: message.to_string(),
+        };
+
+        let cmd = command.to_shell_command();
+
         // Check that the program is "aider"
         assert_eq!(cmd.get_program(), "aider");
-        
+
         // Check that the args are ["-m", "Test message"]
         let args: Vec<_> = cmd.get_args().collect();
         assert_eq!(args.len(), 2);

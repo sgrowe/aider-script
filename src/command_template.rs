@@ -1,4 +1,4 @@
-use std::borrow::Cow;
+use std::{borrow::Cow, fmt::Debug};
 
 use yaml_rust2::YamlLoader;
 
@@ -34,7 +34,10 @@ impl<'a> CommandTemplate<'a> {
         })
     }
 
-    pub fn apply_args<T: AsRef<str>>(&self, args: &[T]) -> anyhow::Result<AiderCommand> {
+    pub fn apply_args<T: AsRef<str>>(&self, args: &[T]) -> anyhow::Result<AiderCommand>
+    where
+        T: Debug,
+    {
         let mut message = Cow::Borrowed(self.template_body);
 
         for (name, value) in self.argument_names.iter().zip(args) {
