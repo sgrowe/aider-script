@@ -9,6 +9,7 @@ use crate::{aider_command::AiderCommand, markdown_doc::MarkdownDoc};
 pub struct CommandTemplate<'a> {
     argument_names: Vec<String>,
     template_body: &'a str,
+    template_name: String,
 }
 
 impl<'a> CommandTemplate<'a> {
@@ -32,6 +33,31 @@ impl<'a> CommandTemplate<'a> {
         Ok(Self {
             argument_names,
             template_body: body,
+            template_name: "template".to_string(), // Default name
+        })
+    }
+    
+    pub fn parse_with_name(s: &'a str, name: &str) -> anyhow::Result<Self> {
+        let MarkdownDoc { frontmatter, body } = MarkdownDoc::parse(s);
+
+        let mut argument_names = Vec::new();
+
+        if !frontmatter.trim().is_empty() {
+            let docs = YamlLoader::load_from_str(frontmatter)?;
+
+            if let Some(args) = docs[0]["args"].as_vec() {
+                for arg in args {
+                    if let Some(arg_str) = arg.as_str() {
+                        argument_names.push(arg_str.into());
+                    }
+                }
+            }
+        }
+
+        Ok(Self {
+            argument_names,
+            template_body: body,
+            template_name: name.to_string(),
         })
     }
 
@@ -48,7 +74,7 @@ impl<'a> CommandTemplate<'a> {
 
         // Create a Tera instance with a single template
         let mut tera = Tera::default();
-        tera.add_raw_template("template", self.template_body)?;
+        tera.add_raw_template(&self.template_name, self.template_body)?;
 
         // Create context with variables
         let mut context = Context::new();
@@ -57,7 +83,7 @@ impl<'a> CommandTemplate<'a> {
         }
 
         // Render the template
-        let rendered = tera.render("template", &context)?;
+        let rendered = tera.render(&self.template_name, &context)?;
 
         Ok(AiderCommand {
             message: rendered,
@@ -75,7 +101,7 @@ mod tests {
         let markdown =
             fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
 
-        let doc = CommandTemplate::parse(&markdown).unwrap();
+        let doc = CommandTemplate::parse_with_name(&markdown, "01_args.md").unwrap();
 
         assert_eq!(doc.argument_names, vec!["FUNCTION"]);
     }
@@ -85,7 +111,7 @@ mod tests {
         let markdown =
             fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
 
-        let doc = CommandTemplate::parse(&markdown).unwrap();
+        let doc = CommandTemplate::parse_with_name(&markdown, "01_args.md").unwrap();
 
         let cmd = doc.apply_args::<&str>(&[]).unwrap_err();
 
@@ -97,7 +123,7 @@ mod tests {
         let markdown =
             fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
 
-        let doc = CommandTemplate::parse(&markdown).unwrap();
+        let doc = CommandTemplate::parse_with_name(&markdown, "01_args.md").unwrap();
 
         let cmd = doc.apply_args(&["my_func_1"]).unwrap();
 
