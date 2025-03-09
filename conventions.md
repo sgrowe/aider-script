@@ -1,0 +1,3 @@
+- Do not give a high-level explanation of what you will do, just do it.
+- Be terse in your response
+- Do not give me example commands to run tests

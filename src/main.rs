@@ -21,7 +21,7 @@ fn main() -> anyhow::Result<()> {
     if args.preview_message {
         println!("Generated message:");
         println!("------------------");
-        println!("");
+        println!();
         println!("{}", aider_cmd.message);
 
         return Ok(());

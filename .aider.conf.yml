@@ -355,6 +355,7 @@ auto-test: true
 
 ## specify a read-only file (can be used multiple times)
 read:
+  - "conventions.md" # conventions
   - "Cargo.toml" # see what packages are available
 
 ## Use VI editing mode in the terminal (default: False)
