@@ -2,6 +2,7 @@ use std::vec;
 
 use crate::markdown_doc::MarkdownDoc;
 
+#[derive(Debug)]
 pub struct CommandTemplate<'a> {
     argument_names: Vec<&'a str>,
     template_body: &'a str,

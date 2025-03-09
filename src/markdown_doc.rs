@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct MarkdownDoc<'a> {
     // TODO: remove `pub`
     pub frontmatter: &'a str,
@@ -49,9 +50,10 @@ mod tests {
 
     #[test]
     fn test_parse_markdown_with_frontmatter() {
-        let markdown = fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
+        let markdown =
+            fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
         let doc = MarkdownDoc::parse(&markdown);
-        
+
         assert!(doc.frontmatter.contains("args:"));
         assert!(doc.frontmatter.contains("- FUNCTION"));
         assert!(doc.body.contains("# Add unit tests for FUNCTION"));

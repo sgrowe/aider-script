@@ -20,6 +20,8 @@ fn main() {
 fn create_aider_command(markdown: &str) -> Command {
     let cmd_template = CommandTemplate::parse(markdown);
 
+    dbg!(&cmd_template);
+
     // Get expected CLI args from doc
 
     // extract arg values from env
@@ -29,10 +31,10 @@ fn create_aider_command(markdown: &str) -> Command {
     // TODO:
     // document.to_aider_command()
 
-    let mut cmd = Command::new("aider");
+    let cmd = Command::new("aider");
 
     // Add the body as the main message
-    cmd.arg("-m").arg(document.body.trim());
+    // cmd.arg("-m").arg(document.body.trim());
 
     cmd
 }
