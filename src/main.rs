@@ -1,15 +1,17 @@
 use std::fs;
 use std::process::Command;
 
+fn create_aider_command(message: String) -> Command {
+    let mut cmd = Command::new("aider");
+    cmd.arg("-m").arg(message);
+    cmd
+}
+
 fn main() {
     let script_file_path = "ai/example.md";
 
     let message = fs::read_to_string(script_file_path).expect("Failed to read the file");
 
-    // Refactor this into a function that takes `message` as an argument, and returns a `Command`, but does not execute it AI!
-    let status = Command::new("aider")
-        .arg("-m")
-        .arg(message)
-        .status()
-        .expect("Failed to execute aider command");
+    let mut cmd = create_aider_command(message);
+    let status = cmd.status().expect("Failed to execute aider command");
 }
