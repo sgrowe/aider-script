@@ -40,6 +40,8 @@ impl<'a> CommandTemplate<'a> {
     {
         let mut message = Cow::Borrowed(self.template_body);
 
+        // If `args`` `self.argument_names`
+
         for (name, value) in self.argument_names.iter().zip(args) {
             message = Cow::Owned(message.replace(name, value.as_ref()));
         }
@@ -63,6 +65,18 @@ mod tests {
         let doc = CommandTemplate::parse(&markdown).unwrap();
 
         assert_eq!(doc.argument_names, vec!["FUNCTION"]);
+    }
+
+    #[test]
+    fn errors_if_required_args_are_not_given() {
+        let markdown =
+            fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
+
+        let doc = CommandTemplate::parse(&markdown).unwrap();
+
+        let cmd = doc.apply_args::<&str>(&[]).unwrap_err();
+
+        assert!(cmd.to_string() == "Missing expected argument \"FUNCTION\".");
     }
 
     #[test]
