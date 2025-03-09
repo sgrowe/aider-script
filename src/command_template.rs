@@ -1,4 +1,5 @@
 use std::vec;
+use yaml_rust2::YamlLoader;
 
 use crate::markdown_doc::MarkdownDoc;
 
@@ -12,10 +13,24 @@ impl<'a> CommandTemplate<'a> {
     pub fn parse(s: &'a str) -> Self {
         let MarkdownDoc { frontmatter, body } = MarkdownDoc::parse(s);
 
-        // Using `yaml-rust2` parse `frontmatter` to extract `argument_names` from the `args` key in `frontmatter` AI!
+        let mut argument_names = Vec::new();
+        
+        if !frontmatter.is_empty() {
+            if let Ok(docs) = YamlLoader::load_from_str(frontmatter) {
+                if !docs.is_empty() {
+                    if let Some(args) = docs[0]["args"].as_vec() {
+                        for arg in args {
+                            if let Some(arg_str) = arg.as_str() {
+                                argument_names.push(arg_str);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         Self {
-            argument_names: vec![],
+            argument_names,
             template_body: body,
         }
     }
