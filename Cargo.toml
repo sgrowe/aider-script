@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0"
 convert_case = "0.8.0"
+yaml-rust2 = "0.10"
