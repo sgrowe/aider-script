@@ -14,7 +14,8 @@ fn main() -> anyhow::Result<()> {
     let mut args = Args::parse();
 
     let template = args.read_template()?;
-    let cmd_template = CommandTemplate::parse(&template)?;
+    let template_name = args.get_template_name();
+    let cmd_template = CommandTemplate::parse_with_name(&template, &template_name)?;
 
     let aider_cmd = cmd_template.apply_args(&args.template_arguments)?;
 

@@ -26,4 +26,17 @@ impl Args {
 
         Ok(message)
     }
+
+    pub fn get_template_name(&self) -> String {
+        if let Some(path_str) = self.template.path().to_str() {
+            // Extract just the filename portion
+            let path = std::path::Path::new(path_str);
+            if let Some(file_name) = path.file_name() {
+                if let Some(name) = file_name.to_str() {
+                    return name.to_string();
+                }
+            }
+        }
+        "template".to_string()
+    }
 }

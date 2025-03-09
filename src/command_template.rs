@@ -13,30 +13,6 @@ pub struct CommandTemplate<'a> {
 }
 
 impl<'a> CommandTemplate<'a> {
-    pub fn parse(s: &'a str) -> anyhow::Result<Self> {
-        let MarkdownDoc { frontmatter, body } = MarkdownDoc::parse(s);
-
-        let mut argument_names = Vec::new();
-
-        if !frontmatter.trim().is_empty() {
-            let docs = YamlLoader::load_from_str(frontmatter)?;
-
-            if let Some(args) = docs[0]["args"].as_vec() {
-                for arg in args {
-                    if let Some(arg_str) = arg.as_str() {
-                        argument_names.push(arg_str.into());
-                    }
-                }
-            }
-        }
-
-        Ok(Self {
-            argument_names,
-            template_body: body,
-            template_name: "template".to_string(), // Default name
-        })
-    }
-    
     pub fn parse_with_name(s: &'a str, name: &str) -> anyhow::Result<Self> {
         let MarkdownDoc { frontmatter, body } = MarkdownDoc::parse(s);
 
