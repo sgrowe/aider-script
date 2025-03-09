@@ -7,7 +7,7 @@ fn main() {
     let message = fs::read_to_string(script_file_path).expect("Failed to read the file");
 
     let mut cmd = create_aider_command(message);
-    let status = cmd.status().expect("Failed to execute aider command");
+    let _status = cmd.status().expect("Failed to execute aider command");
 }
 
 fn create_aider_command(message: String) -> Command {
@@ -42,6 +42,6 @@ mod tests {
         // Check that we have the -m flag followed by the message
         assert_eq!(args.len(), 2);
         assert_eq!(args[0], "-m");
-        assert_eq!(args[1], message);
+        assert_eq!(args[1].to_string_lossy(), message);
     }
 }
