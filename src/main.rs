@@ -31,10 +31,8 @@ fn create_aider_command(markdown: &str) -> Command {
     // TODO:
     // document.to_aider_command()
 
-    let cmd = Command::new("aider");
-
     // Add the body as the main message
     // cmd.arg("-m").arg(document.body.trim());
 
-    cmd
+    Command::new("aider")
 }

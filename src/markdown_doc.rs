@@ -43,7 +43,7 @@ impl<'a> MarkdownDoc<'a> {
         }
 
         let frontmatter = match fm_start.zip(fm_end) {
-            Some((s, e)) => &markdown[s..e].trim_end(),
+            Some((s, e)) => markdown[s..e].trim_end(),
             None => {
                 // No front matter found
                 ""
@@ -79,7 +79,7 @@ mod tests {
 
              No frontmatter here.
              ";
-        let doc = MarkdownDoc::parse(&markdown);
+        let doc = MarkdownDoc::parse(markdown);
 
         assert_eq!(doc.frontmatter, "");
         assert!(doc.body.starts_with("# Example doc"));
