@@ -14,30 +14,21 @@ fn create_aider_command(markdown: &str) -> Command {
     // `markdown` will be a markdown document with a frontmatter section enclosed between two lines made entirely of dashes (e.g. `----`)
     let mut cmd = Command::new("aider");
 
-    // Split the markdown by separator lines with any number of dashes
-    let parts: Vec<String> = markdown.split_inclusive(&['\n'])
-        .collect::<Vec<_>>()
-        .windows(2)
+    // Try to find a separator line with any number of dashes (at least 3)
+    let parts = if let Some(separator_pos) = markdown.lines()
         .enumerate()
-        .filter_map(|(i, window)| {
-            let line = window[0].trim_end();
-            let next_line_starts_with_newline = window[1].starts_with('\n');
-            
-            if line.chars().all(|c| c == '-') && line.len() >= 3 && next_line_starts_with_newline {
-                Some(i)
-            } else {
-                None
-            }
-        }).next()
-        .map_or_else(
-            || vec![markdown.to_string()],
-            |separator_idx| {
-                let lines: Vec<&str> = markdown.split_inclusive(&['\n']).collect();
-                let frontmatter = lines[..separator_idx].concat();
-                let body = lines[separator_idx + 1..].concat();
-                vec![frontmatter, body]
-            }
-        );
+        .find(|(_, line)| line.trim().chars().all(|c| c == '-') && line.trim().len() >= 3)
+        .map(|(idx, _)| idx)
+    {
+        // Split the content at the separator
+        let lines: Vec<&str> = markdown.lines().collect();
+        let frontmatter = lines[..separator_pos].join("\n");
+        let body = lines[(separator_pos + 1)..].join("\n");
+        vec![frontmatter, body]
+    } else {
+        // No separator found
+        vec![markdown.to_string()]
+    };
 
     if parts.len() >= 2 {
         // Extract frontmatter and body
