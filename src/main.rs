@@ -14,25 +14,15 @@ fn create_aider_command(markdown: &str) -> Command {
     // `markdown` will be a markdown document with a frontmatter section enclosed between two lines made entirely of dashes (e.g. `----`)
     let mut cmd = Command::new("aider");
 
-    let parts = extract_frontmatter(markdown);
+    let document = extract_frontmatter(markdown);
 
-    if parts.len() >= 2 {
-        // Extract frontmatter and body
-        let frontmatter = parts[0].trim().to_string();
-        let body_string = parts[1..].join("\n----\n");
-        let body = body_string.trim().to_string();
-
-        // Add frontmatter as a separate argument if it's not empty
-        if !frontmatter.is_empty() {
-            cmd.arg("--frontmatter").arg(frontmatter);
-        }
-
-        // Add the body as the main message
-        cmd.arg("-m").arg(body);
-    } else {
-        // If no separator found, use the entire markdown as the message
-        cmd.arg("-m").arg(markdown);
+    // Add frontmatter as a separate argument if it's not empty
+    if !document.frontmatter.trim().is_empty() {
+        cmd.arg("--frontmatter").arg(document.frontmatter.trim());
     }
+
+    // Add the body as the main message
+    cmd.arg("-m").arg(document.body.trim());
 
     cmd
 }
@@ -42,10 +32,9 @@ struct Document<'a> {
     body: &'a str,
 }
 
-// Update this function to return a `Document` AI!
-fn extract_frontmatter(markdown: &str) -> Vec<String> {
+fn extract_frontmatter(markdown: &str) -> Document {
     // Try to find a separator line with any number of dashes (at least 3)
-    let parts = if let Some(separator_pos) = markdown
+    if let Some(separator_pos) = markdown
         .lines()
         .enumerate()
         .find(|(_, line)| line.trim().chars().all(|c| c == '-') && line.trim().len() >= 3)
@@ -55,12 +44,17 @@ fn extract_frontmatter(markdown: &str) -> Vec<String> {
         let lines: Vec<&str> = markdown.lines().collect();
         let frontmatter = lines[..separator_pos].join("\n");
         let body = lines[(separator_pos + 1)..].join("\n");
-        vec![frontmatter, body]
+        Document {
+            frontmatter: Box::leak(frontmatter.into_boxed_str()),
+            body: Box::leak(body.into_boxed_str()),
+        }
     } else {
         // No separator found
-        vec![markdown.to_string()]
-    };
-    parts
+        Document {
+            frontmatter: "",
+            body: Box::leak(markdown.to_string().into_boxed_str()),
+        }
+    }
 }
 
 #[cfg(test)]
