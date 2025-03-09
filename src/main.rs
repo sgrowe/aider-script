@@ -36,15 +36,15 @@ fn create_aider_command(markdown: &str) -> Command {
                 let lines: Vec<&str> = markdown.split_inclusive(&['\n']).collect();
                 let frontmatter = lines[..separator_idx].concat();
                 let body = lines[separator_idx + 1..].concat();
-                vec![frontmatter.as_str(), body.as_str()]
+                vec![frontmatter, body]
             }
         );
 
     if parts.len() >= 2 {
         // Extract frontmatter and body
-        let frontmatter = parts[0].trim();
+        let frontmatter = parts[0].trim().to_string();
         let body_string = parts[1..].join("\n----\n");
-        let body = body_string.trim();
+        let body = body_string.trim().to_string();
 
         // Add frontmatter as a separate argument if it's not empty
         if !frontmatter.is_empty() {
