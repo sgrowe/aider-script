@@ -102,8 +102,7 @@ mod tests {
 
     #[test]
     fn test_create_aider_command_with_frontmatter() {
-        let message =
-            "title: Test Title\ntags: test, example\n\n----\n\nThis is the body of the document.";
+        let message = "----\ntitle: Test Title\ntags: test, example\n\n----\n\nThis is the body of the document.";
         let cmd = create_aider_command(message);
 
         // Convert args to a Vec for easier testing
@@ -125,39 +124,35 @@ mod tests {
 
     #[test]
     fn test_create_aider_command_with_multiple_separators() {
-        let message = "frontmatter\n----\nbody part 1\n----\nbody part 2";
+        let message = "----\nfrontmatter\n----\nbody part 1\n----\nbody part 2";
         let cmd = create_aider_command(message);
 
         // Convert args to a Vec for easier testing
         let args: Vec<_> = cmd.get_args().collect();
 
         // Check that only the first separator is used for frontmatter
-        assert_eq!(args.len(), 4);
-        assert_eq!(args[0], "--frontmatter");
-        assert_eq!(args[1].to_string_lossy(), "frontmatter");
-        assert_eq!(args[2], "-m");
-        assert_eq!(args[3].to_string_lossy(), "body part 1\n----\nbody part 2");
+        assert_eq!(args.len(), 2);
+        assert_eq!(args[0], "-m");
+        assert_eq!(args[1].to_string_lossy(), "body part 1\n----\nbody part 2");
     }
 
     #[test]
     fn test_create_aider_command_with_variable_dash_count() {
-        let message = "frontmatter\n-----\nbody content";
+        let message = "----\nfrontmatter\n-----\nbody content";
         let cmd = create_aider_command(message);
 
         // Convert args to a Vec for easier testing
         let args: Vec<_> = cmd.get_args().collect();
 
         // Check that separator with 5 dashes works
-        assert_eq!(args.len(), 4);
-        assert_eq!(args[0], "--frontmatter");
-        assert_eq!(args[1].to_string_lossy(), "frontmatter");
-        assert_eq!(args[2], "-m");
-        assert_eq!(args[3].to_string_lossy(), "body content");
+        assert_eq!(args.len(), 2);
+        assert_eq!(args[0], "-m");
+        assert_eq!(args[1].to_string_lossy(), "body content");
     }
 
     #[test]
     fn test_create_aider_command_with_minimum_dashes() {
-        let message = "frontmatter\n---\nbody content";
+        let message = "----\nfrontmatter\n---\nbody content";
         let cmd = create_aider_command(message);
 
         // Convert args to a Vec for easier testing
