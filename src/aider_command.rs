@@ -9,7 +9,7 @@ impl AiderCommand {
     pub fn to_command(&self) -> Command {
         let mut cmd = Command::new("aider");
         
-        cmd.arg("-m").arg(&self.message.trim());
+        cmd.arg("-m").arg(self.message.trim());
         
         cmd
     }
