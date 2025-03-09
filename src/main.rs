@@ -1,9 +1,11 @@
 use std::process::Command;
+use std::fs;
 
 fn main() {
     let script_file_path = "ai/example.md";
 
-    // Read in `message` from the file at `script_file_path` and pass it in below AI!
+    let message = fs::read_to_string(script_file_path)
+        .expect("Failed to read the file");
 
     let status = Command::new("aider")
         .arg("-m")
