@@ -1,4 +1,6 @@
-use std::fs;
+use clap::Parser;
+use clio::Input;
+use std::io::Read;
 use std::process::Command;
 
 use command_template::CommandTemplate;
@@ -8,13 +10,26 @@ mod command_template;
 mod markdown_doc;
 mod str;
 
-fn main() {
-    let script_file_path = "src/fixtures/01_args.md";
+#[derive(Parser, Debug)]
+#[command(name = "aider-script")]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Template file, use '-' for stdin
+    #[clap(value_parser, default_value = "-")]
+    template: Input,
+}
 
-    let message = fs::read_to_string(script_file_path).expect("Failed to read the file");
+fn main() -> anyhow::Result<()> {
+    let mut args = Args::parse();
+
+    let mut message = String::new();
+
+    args.template.read_to_string(&mut message)?;
 
     let mut cmd = create_aider_command(&message);
-    cmd.status().expect("Failed to execute aider command");
+    cmd.status()?;
+
+    Ok(())
 }
 
 fn create_aider_command(markdown: &str) -> Command {
