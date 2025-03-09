@@ -34,12 +34,11 @@ impl<'a> CommandTemplate<'a> {
         })
     }
 
-    // Make this function support both `&[&str]` and `&[String]` as input AI!
-    pub fn apply_args(&self, args: &[&str]) -> anyhow::Result<AiderCommand> {
+    pub fn apply_args<T: AsRef<str>>(&self, args: &[T]) -> anyhow::Result<AiderCommand> {
         let mut message = Cow::Borrowed(self.template_body);
 
         for (name, value) in self.argument_names.iter().zip(args) {
-            message = Cow::Owned(message.replace(name, value));
+            message = Cow::Owned(message.replace(name, value.as_ref()));
         }
 
         Ok(AiderCommand {
