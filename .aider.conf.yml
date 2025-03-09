@@ -162,7 +162,7 @@ cache-prompts: true
 #pretty: true
 
 ## Enable/disable streaming responses (default: True)
-#stream: true
+stream: false
 
 ## Set the color for user input (default: #00cc00)
 #user-input-color: #00cc00
