@@ -15,7 +15,7 @@ fn create_aider_command(markdown: &str) -> Command {
     let mut cmd = Command::new("aider");
 
     // Split the markdown by separator lines with any number of dashes
-    let parts: Vec<&str> = markdown.split_inclusive(&['\n'])
+    let parts: Vec<String> = markdown.split_inclusive(&['\n'])
         .collect::<Vec<_>>()
         .windows(2)
         .enumerate()
@@ -31,7 +31,7 @@ fn create_aider_command(markdown: &str) -> Command {
         })
         .nth(0)
         .map_or_else(
-            || vec![markdown],
+            || vec![markdown.to_string()],
             |separator_idx| {
                 let lines: Vec<&str> = markdown.split_inclusive(&['\n']).collect();
                 let frontmatter = lines[..separator_idx].concat();
