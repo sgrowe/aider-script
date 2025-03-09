@@ -1,6 +1,5 @@
 #[derive(Debug)]
 pub struct MarkdownDoc<'a> {
-    // TODO: remove `pub`
     pub frontmatter: &'a str,
     pub body: &'a str,
 }
@@ -60,7 +59,18 @@ mod tests {
             fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
         let doc = MarkdownDoc::parse(&markdown);
 
-        dbg!(doc.frontmatter);
-        assert!(doc.frontmatter == ("args:\n  - FUNCTION"));
+        assert!(doc.frontmatter == "args:\n  - FUNCTION");
+    }
+
+    #[test]
+    fn test_parse_markdown_without_frontmatter() {
+        let markdown = "
+             # Example doc
+
+             No frontmatter here.
+             ";
+        let doc = MarkdownDoc::parse(&markdown);
+
+        assert!(doc.frontmatter == "");
     }
 }
