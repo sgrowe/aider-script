@@ -12,6 +12,8 @@ impl<'a> CommandTemplate<'a> {
     pub fn parse(s: &'a str) -> Self {
         let MarkdownDoc { frontmatter, body } = MarkdownDoc::parse(s);
 
+        // Using `yaml-rust2` parse `frontmatter` to extract `argument_names` from the `args` key in `frontmatter` AI!
+
         Self {
             argument_names: vec![],
             template_body: body,
@@ -28,6 +30,7 @@ mod tests {
     fn test_parse_markdown_with_frontmatter() {
         let markdown =
             fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
+
         let doc = CommandTemplate::parse(&markdown);
 
         assert!(doc.argument_names == vec!["FUNCTION"]);
