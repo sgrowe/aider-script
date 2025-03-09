@@ -1,6 +1,8 @@
+use std::borrow::Cow;
+
 use yaml_rust2::YamlLoader;
 
-use crate::markdown_doc::MarkdownDoc;
+use crate::{aider_command::AiderCommand, markdown_doc::MarkdownDoc};
 
 #[derive(Debug)]
 pub struct CommandTemplate<'a> {
@@ -31,6 +33,18 @@ impl<'a> CommandTemplate<'a> {
             template_body: body,
         })
     }
+
+    pub fn apply_args(&self, args: &[&str]) -> anyhow::Result<AiderCommand> {
+        let mut message = Cow::Borrowed(self.template_body);
+
+        for (name, value) in self.argument_names.iter().zip(args) {
+            message = Cow::Owned(message.replace(name, value));
+        }
+
+        Ok(AiderCommand {
+            message: message.into_owned(),
+        })
+    }
 }
 
 #[cfg(test)]
@@ -45,6 +59,42 @@ mod tests {
 
         let doc = CommandTemplate::parse(&markdown).unwrap();
 
-        assert!(doc.argument_names == vec!["FUNCTION"]);
+        assert_eq!(doc.argument_names, vec!["FUNCTION"]);
+    }
+
+    #[test]
+    fn test_applies_given_arguments_to_the_template() {
+        let markdown =
+            fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
+
+        let doc = CommandTemplate::parse(&markdown).unwrap();
+
+        let cmd = doc.apply_args(&["my_func_1"]).unwrap();
+
+        assert_eq!(
+            cmd.message,
+            "# Add unit tests for my_func_1
+
+## Step 1 - think about what should be tested
+
+Read `my_func_1` and think about how a Senior Rust Software Engineer would want to test it.
+
+## Step 2 - add placeholder tests
+
+Add placeholders for each of those unit tests using `todo!()`
+
+Example:
+
+```rs
+#[test]
+fn test_my_func_1_does_X() {
+    todo!()
+}
+```
+
+## Step 3 - implement tests
+
+Now implement those unit tests"
+        )
     }
 }

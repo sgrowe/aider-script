@@ -13,6 +13,7 @@ impl<'a> MarkdownDoc<'a> {
         // Extract front matter
         let mut fm_start = None;
         let mut fm_end = None;
+        let mut body_start = None;
 
         while let Some(line) = lines.next() {
             if line != "---" {
@@ -27,24 +28,27 @@ impl<'a> MarkdownDoc<'a> {
                 }
             } else {
                 let offset = (line.as_ptr() as usize) - markdown.as_ptr() as usize;
+
                 fm_end = Some(offset);
+                body_start = lines
+                    .next()
+                    .map(|l| (l.as_ptr() as usize) - markdown.as_ptr() as usize);
+
                 break;
             }
         }
 
-        match fm_start.zip(fm_end) {
-            Some((s, e)) => Self {
-                frontmatter: &markdown[s..e].trim_end(),
-                body: &markdown[e..].trim_end(),
-            },
+        let frontmatter = match fm_start.zip(fm_end) {
+            Some((s, e)) => &markdown[s..e].trim_end(),
             None => {
                 // No front matter found
-                Self {
-                    frontmatter: "",
-                    body: markdown,
-                }
+                ""
             }
-        }
+        };
+
+        let body = markdown[body_start.unwrap_or(0)..].trim();
+
+        Self { frontmatter, body }
     }
 }
 
@@ -60,6 +64,8 @@ mod tests {
         let doc = MarkdownDoc::parse(&markdown);
 
         assert_eq!(doc.frontmatter, "args:\n  - FUNCTION");
+
+        assert!(doc.body.starts_with("# Add unit tests for FUNCTION\n"));
     }
 
     #[test]
@@ -72,5 +78,6 @@ mod tests {
         let doc = MarkdownDoc::parse(&markdown);
 
         assert_eq!(doc.frontmatter, "");
+        assert!(doc.body.starts_with("# Example doc"));
     }
 }
