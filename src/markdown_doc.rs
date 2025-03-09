@@ -69,7 +69,7 @@ mod tests {
 
         assert_eq!(doc.frontmatter, "args:\n  - FUNCTION");
 
-        assert!(doc.body.starts_with("# Add unit tests for FUNCTION\n"));
+        assert!(doc.body.starts_with("# Add unit tests for {{ FUNCTION }}"));
     }
 
     #[test]

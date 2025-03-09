@@ -3,11 +3,11 @@ args:
   - FUNCTION
 ---
 
-# Add unit tests for FUNCTION
+# Add unit tests for {{ FUNCTION }}
 
 ## Step 1 - think about what should be tested
 
-Read `FUNCTION` and think about how a Senior Rust Software Engineer would want to test it.
+Read `{{ FUNCTION }}` and think about how a Senior Rust Software Engineer would want to test it.
 
 ## Step 2 - add placeholder tests
 
@@ -17,7 +17,7 @@ Example:
 
 ```rs
 #[test]
-fn test_FUNCTION_does_X() {
+fn test_{{ FUNCTION }}_does_X() {
     todo!()
 }
 ```

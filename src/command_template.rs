@@ -1,5 +1,6 @@
-use std::{borrow::Cow, fmt::Debug};
+use std::fmt::Debug;
 
+use tera::{Tera, Context};
 use yaml_rust2::YamlLoader;
 
 use crate::{aider_command::AiderCommand, markdown_doc::MarkdownDoc};
@@ -34,24 +35,32 @@ impl<'a> CommandTemplate<'a> {
         })
     }
 
-    pub fn apply_args<T: AsRef<str>>(&self, args: &[T]) -> anyhow::Result<AiderCommand>
+    pub fn apply_args<T>(&self, args: &[T]) -> anyhow::Result<AiderCommand>
     where
-        T: Debug,
+        T: AsRef<str> + Debug,
     {
-        let mut message = Cow::Borrowed(self.template_body);
-
+        // Validate that we have enough arguments
         if args.len() < self.argument_names.len() {
             if let Some(missing_arg) = self.argument_names.get(args.len()) {
                 return Err(anyhow::anyhow!("Missing expected argument \"{}\".", missing_arg));
             }
         }
 
+        // Create a Tera instance with a single template
+        let mut tera = Tera::default();
+        tera.add_raw_template("template", self.template_body)?;
+
+        // Create context with variables
+        let mut context = Context::new();
         for (name, value) in self.argument_names.iter().zip(args) {
-            message = Cow::Owned(message.replace(name, value.as_ref()));
+            context.insert(name, &value.as_ref());
         }
 
+        // Render the template
+        let rendered = tera.render("template", &context)?;
+
         Ok(AiderCommand {
-            message: message.into_owned(),
+            message: rendered,
         })
     }
 }
