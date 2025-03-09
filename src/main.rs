@@ -46,18 +46,20 @@ fn extract_frontmatter(markdown: &str) -> Document {
         // Calculate the correct indices for frontmatter and body
         let frontmatter_start = 0;
         let frontmatter_end = lines[..separator_pos].join("\n").len();
-        
+
         // Find the position after the separator line
         let separator_line = lines[separator_pos];
-        let separator_pos_in_str = markdown.find(separator_line).unwrap_or(0) + separator_line.len();
-        
+        let separator_pos_in_str =
+            markdown.find(separator_line).unwrap_or(0) + separator_line.len();
+
         // Find the start of the body (skipping any newlines after the separator)
-        let body_start = if let Some(pos) = markdown[separator_pos_in_str..].find(|c: char| c != '\n') {
-            separator_pos_in_str + pos
-        } else {
-            separator_pos_in_str
-        };
-        
+        let body_start =
+            if let Some(pos) = markdown[separator_pos_in_str..].find(|c: char| c != '\n') {
+                separator_pos_in_str + pos
+            } else {
+                separator_pos_in_str
+            };
+
         Document {
             frontmatter: &markdown[frontmatter_start..frontmatter_end],
             body: &markdown[body_start..],
@@ -163,6 +165,7 @@ mod tests {
 
         // Check that separator with 3 dashes works
         assert_eq!(args.len(), 4);
+        // Remove the `--frontmatter` and `frontmatter` arguments AI!
         assert_eq!(args[0], "--frontmatter");
         assert_eq!(args[1].to_string_lossy(), "frontmatter");
         assert_eq!(args[2], "-m");
