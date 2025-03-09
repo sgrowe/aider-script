@@ -18,3 +18,18 @@ impl<'a> CommandTemplate<'a> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+
+    #[test]
+    fn test_parse_markdown_with_frontmatter() {
+        let markdown =
+            fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
+        let doc = CommandTemplate::parse(&markdown);
+
+        assert!(doc.argument_names == vec!["FUNCTION"]);
+    }
+}
