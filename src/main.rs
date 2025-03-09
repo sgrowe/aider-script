@@ -10,10 +10,13 @@ fn main() {
     cmd.status().expect("Failed to execute aider command");
 }
 
-fn create_aider_command(message: &str) -> Command {
+fn create_aider_command(markdown: &str) -> Command {
+    // `markdown` will be a markdown document with a frontmatter section enclosed between two lines made entirely of dashes (e.g. `----`)
+    // Update this function to extract the front matter section, and the body of the markdown document AI!
+
     let mut cmd = Command::new("aider");
 
-    cmd.arg("-m").arg(message);
+    cmd.arg("-m").arg(markdown);
 
     cmd
 }
