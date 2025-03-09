@@ -13,21 +13,21 @@ fn main() {
 fn create_aider_command(markdown: &str) -> Command {
     // `markdown` will be a markdown document with a frontmatter section enclosed between two lines made entirely of dashes (e.g. `----`)
     let mut cmd = Command::new("aider");
-    
+
     // Split the markdown by the separator lines
-    let parts: Vec<&str> = markdown.split("\n----\n").collect();
-    
+    let parts: Vec<&str> = markdown.split("\n----\n").collect(); // the front matter section can contain any number of dashes, update this function to support any number AI!
+
     if parts.len() >= 2 {
         // Extract frontmatter and body
         let frontmatter = parts[0].trim();
         let body_string = parts[1..].join("\n----\n");
         let body = body_string.trim();
-        
+
         // Add frontmatter as a separate argument if it's not empty
         if !frontmatter.is_empty() {
             cmd.arg("--frontmatter").arg(frontmatter);
         }
-        
+
         // Add the body as the main message
         cmd.arg("-m").arg(body);
     } else {
@@ -64,10 +64,11 @@ mod tests {
         assert_eq!(args[0], "-m");
         assert_eq!(args[1].to_string_lossy(), message);
     }
-    
+
     #[test]
     fn test_create_aider_command_with_frontmatter() {
-        let message = "title: Test Title\ntags: test, example\n\n----\n\nThis is the body of the document.";
+        let message =
+            "title: Test Title\ntags: test, example\n\n----\n\nThis is the body of the document.";
         let cmd = create_aider_command(message);
 
         // Convert args to a Vec for easier testing
@@ -76,11 +77,17 @@ mod tests {
         // Check that we have the --frontmatter flag followed by the frontmatter, then -m flag followed by the body
         assert_eq!(args.len(), 4);
         assert_eq!(args[0], "--frontmatter");
-        assert_eq!(args[1].to_string_lossy(), "title: Test Title\ntags: test, example");
+        assert_eq!(
+            args[1].to_string_lossy(),
+            "title: Test Title\ntags: test, example"
+        );
         assert_eq!(args[2], "-m");
-        assert_eq!(args[3].to_string_lossy(), "This is the body of the document.");
+        assert_eq!(
+            args[3].to_string_lossy(),
+            "This is the body of the document."
+        );
     }
-    
+
     #[test]
     fn test_create_aider_command_with_multiple_separators() {
         let message = "frontmatter\n----\nbody part 1\n----\nbody part 2";
