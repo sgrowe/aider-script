@@ -6,12 +6,11 @@ fn main() {
 
     let message = fs::read_to_string(script_file_path).expect("Failed to read the file");
 
-    let mut cmd = create_aider_command(message);
+    let mut cmd = create_aider_command(&message);
     let _status = cmd.status().expect("Failed to execute aider command");
 }
 
-// `message` should be a `&str` argument AI!
-fn create_aider_command(message: String) -> Command {
+fn create_aider_command(message: &str) -> Command {
     let mut cmd = Command::new("aider");
 
     cmd.arg("-m").arg(message);
@@ -26,7 +25,7 @@ mod tests {
     #[test]
     fn test_create_aider_command_basic() {
         let message = String::from("Test message");
-        let cmd = create_aider_command(message);
+        let cmd = create_aider_command(&message);
 
         // Check that the program is "aider"
         assert_eq!(cmd.get_program(), "aider");
@@ -35,7 +34,7 @@ mod tests {
     #[test]
     fn test_create_aider_command_args() {
         let message = String::from("Test message");
-        let cmd = create_aider_command(message.clone());
+        let cmd = create_aider_command(&message);
 
         // Convert args to a Vec for easier testing
         let args: Vec<_> = cmd.get_args().collect();
