@@ -164,11 +164,8 @@ mod tests {
         let args: Vec<_> = cmd.get_args().collect();
 
         // Check that separator with 3 dashes works
-        assert_eq!(args.len(), 4);
-        // Remove the `--frontmatter` and `frontmatter` arguments AI!
-        assert_eq!(args[0], "--frontmatter");
-        assert_eq!(args[1].to_string_lossy(), "frontmatter");
-        assert_eq!(args[2], "-m");
-        assert_eq!(args[3].to_string_lossy(), "body content");
+        assert_eq!(args.len(), 2);
+        assert_eq!(args[0], "-m");
+        assert_eq!(args[1].to_string_lossy(), "body content");
     }
 }
