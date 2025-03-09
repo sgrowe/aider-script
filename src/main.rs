@@ -20,7 +20,8 @@ fn create_aider_command(markdown: &str) -> Command {
     if parts.len() >= 2 {
         // Extract frontmatter and body
         let frontmatter = parts[0].trim();
-        let body = parts[1..].join("\n----\n").trim();
+        let body_string = parts[1..].join("\n----\n");
+        let body = body_string.trim();
         
         // Add frontmatter as a separate argument if it's not empty
         if !frontmatter.is_empty() {
