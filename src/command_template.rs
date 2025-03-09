@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use tera::{Tera, Context};
+use tera::{Context, Tera};
 use yaml_rust2::YamlLoader;
 
 use crate::{aider_command::AiderCommand, markdown_doc::MarkdownDoc};
@@ -9,11 +9,11 @@ use crate::{aider_command::AiderCommand, markdown_doc::MarkdownDoc};
 pub struct CommandTemplate<'a> {
     argument_names: Vec<String>,
     template_body: &'a str,
-    template_name: String,
+    template_name: &'a str,
 }
 
 impl<'a> CommandTemplate<'a> {
-    pub fn parse_with_name(s: &'a str, name: &str) -> anyhow::Result<Self> {
+    pub fn parse_with_name(s: &'a str, name: &'a str) -> anyhow::Result<Self> {
         let MarkdownDoc { frontmatter, body } = MarkdownDoc::parse(s);
 
         let mut argument_names = Vec::new();
@@ -33,7 +33,7 @@ impl<'a> CommandTemplate<'a> {
         Ok(Self {
             argument_names,
             template_body: body,
-            template_name: name.to_string(),
+            template_name: name,
         })
     }
 
@@ -44,7 +44,10 @@ impl<'a> CommandTemplate<'a> {
         // Validate that we have enough arguments
         if args.len() < self.argument_names.len() {
             if let Some(missing_arg) = self.argument_names.get(args.len()) {
-                return Err(anyhow::anyhow!("Missing expected argument \"{}\".", missing_arg));
+                return Err(anyhow::anyhow!(
+                    "Missing expected argument \"{}\".",
+                    missing_arg
+                ));
             }
         }
 
@@ -61,9 +64,7 @@ impl<'a> CommandTemplate<'a> {
         // Render the template
         let rendered = tera.render(&self.template_name, &context)?;
 
-        Ok(AiderCommand {
-            message: rendered,
-        })
+        Ok(AiderCommand { message: rendered })
     }
 }
 
