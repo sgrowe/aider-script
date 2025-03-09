@@ -1,12 +1,6 @@
 use std::fs;
 use std::process::Command;
 
-fn create_aider_command(message: String) -> Command {
-    let mut cmd = Command::new("aider");
-    cmd.arg("-m").arg(message);
-    cmd
-}
-
 fn main() {
     let script_file_path = "ai/example.md";
 
@@ -14,4 +8,13 @@ fn main() {
 
     let mut cmd = create_aider_command(message);
     let status = cmd.status().expect("Failed to execute aider command");
+}
+
+// Add some basic unit tests for this function AI!
+fn create_aider_command(message: String) -> Command {
+    let mut cmd = Command::new("aider");
+
+    cmd.arg("-m").arg(message);
+
+    cmd
 }
