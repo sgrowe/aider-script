@@ -14,21 +14,7 @@ fn create_aider_command(markdown: &str) -> Command {
     // `markdown` will be a markdown document with a frontmatter section enclosed between two lines made entirely of dashes (e.g. `----`)
     let mut cmd = Command::new("aider");
 
-    // Try to find a separator line with any number of dashes (at least 3)
-    let parts = if let Some(separator_pos) = markdown.lines()
-        .enumerate()
-        .find(|(_, line)| line.trim().chars().all(|c| c == '-') && line.trim().len() >= 3)
-        .map(|(idx, _)| idx)
-    {
-        // Split the content at the separator
-        let lines: Vec<&str> = markdown.lines().collect();
-        let frontmatter = lines[..separator_pos].join("\n");
-        let body = lines[(separator_pos + 1)..].join("\n");
-        vec![frontmatter, body]
-    } else {
-        // No separator found
-        vec![markdown.to_string()]
-    };
+    let parts = extract_frontmatter(markdown);
 
     if parts.len() >= 2 {
         // Extract frontmatter and body
@@ -49,6 +35,32 @@ fn create_aider_command(markdown: &str) -> Command {
     }
 
     cmd
+}
+
+struct Document<'a> {
+    frontmatter: &'a str,
+    body: &'a str,
+}
+
+// Update this function to return a `Document` AI!
+fn extract_frontmatter(markdown: &str) -> Vec<String> {
+    // Try to find a separator line with any number of dashes (at least 3)
+    let parts = if let Some(separator_pos) = markdown
+        .lines()
+        .enumerate()
+        .find(|(_, line)| line.trim().chars().all(|c| c == '-') && line.trim().len() >= 3)
+        .map(|(idx, _)| idx)
+    {
+        // Split the content at the separator
+        let lines: Vec<&str> = markdown.lines().collect();
+        let frontmatter = lines[..separator_pos].join("\n");
+        let body = lines[(separator_pos + 1)..].join("\n");
+        vec![frontmatter, body]
+    } else {
+        // No separator found
+        vec![markdown.to_string()]
+    };
+    parts
 }
 
 #[cfg(test)]
@@ -116,7 +128,7 @@ mod tests {
         assert_eq!(args[2], "-m");
         assert_eq!(args[3].to_string_lossy(), "body part 1\n----\nbody part 2");
     }
-    
+
     #[test]
     fn test_create_aider_command_with_variable_dash_count() {
         let message = "frontmatter\n-----\nbody content";
@@ -132,7 +144,7 @@ mod tests {
         assert_eq!(args[2], "-m");
         assert_eq!(args[3].to_string_lossy(), "body content");
     }
-    
+
     #[test]
     fn test_create_aider_command_with_minimum_dashes() {
         let message = "frontmatter\n---\nbody content";
