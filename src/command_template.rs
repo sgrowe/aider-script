@@ -40,7 +40,11 @@ impl<'a> CommandTemplate<'a> {
     {
         let mut message = Cow::Borrowed(self.template_body);
 
-        // If `args` is shorter than `self.argument_names`, return an `Err` AI!
+        if args.len() < self.argument_names.len() {
+            if let Some(missing_arg) = self.argument_names.get(args.len()) {
+                return Err(anyhow::anyhow!("Missing expected argument \"{}\".", missing_arg));
+            }
+        }
 
         for (name, value) in self.argument_names.iter().zip(args) {
             message = Cow::Owned(message.replace(name, value.as_ref()));
@@ -69,7 +73,6 @@ mod tests {
 
     #[test]
     fn errors_if_required_args_are_not_given() {
-        // AI: this test is currently failing, we should implement the functionality so that it passes
         let markdown =
             fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
 
