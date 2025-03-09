@@ -117,7 +117,7 @@
 # Cache settings:
 
 ## Enable caching of prompts (default: False)
-#cache-prompts: false
+cache-prompts: true
 
 ## Number of times to ping at 5min intervals to keep prompt cache warm (default: 0)
 #cache-keepalive-pings: false
@@ -253,7 +253,7 @@
 
 ## Specify lint commands to run for different languages, eg: "python: flake8 --select=..." (can be used multiple times)
 lint-cmd:
- - "./lint"
+  - "./lint"
 
 ## Enable/disable automatic linting after changes (default: True)
 auto-lint: true
@@ -354,12 +354,8 @@ auto-test: true
 #  - zzz
 
 ## specify a read-only file (can be used multiple times)
-#read: xxx
-## Specify multiple values like this:
-#read:
-#  - xxx
-#  - yyy
-#  - zzz
+read:
+  - "Cargo.toml" # see what packages are available
 
 ## Use VI editing mode in the terminal (default: False)
 #vim: false
