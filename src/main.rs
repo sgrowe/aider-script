@@ -43,10 +43,20 @@ fn extract_frontmatter(markdown: &str) -> Document {
         // Split the content at the separator
         let lines: Vec<&str> = markdown.lines().collect();
 
-        // Find the start and end indices for frontmatter and body
+        // Calculate the correct indices for frontmatter and body
         let frontmatter_start = 0;
         let frontmatter_end = lines[..separator_pos].join("\n").len();
-        let body_start = markdown.find(lines[separator_pos + 1]).unwrap_or(0);
+        
+        // Find the position after the separator line
+        let separator_line = lines[separator_pos];
+        let separator_pos_in_str = markdown.find(separator_line).unwrap_or(0) + separator_line.len();
+        
+        // Find the start of the body (skipping any newlines after the separator)
+        let body_start = if let Some(pos) = markdown[separator_pos_in_str..].find(|c: char| c != '\n') {
+            separator_pos_in_str + pos
+        } else {
+            separator_pos_in_str
+        };
         
         Document {
             frontmatter: &markdown[frontmatter_start..frontmatter_end],
