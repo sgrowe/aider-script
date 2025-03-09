@@ -1,1 +1,5 @@
-# Add a bash script which ignores any arguments passed and simply calls `cargo clippy --fix` AI!
+#!/bin/bash
+# This script runs cargo clippy with the --fix option
+# Any arguments passed to this script are ignored
+
+cargo clippy --fix
