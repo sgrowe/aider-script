@@ -1,6 +1,10 @@
 use std::fs;
 use std::process::Command;
 
+use document::Document;
+
+mod document;
+
 fn main() {
     let script_file_path = "ai/example.md";
 
@@ -11,14 +15,12 @@ fn main() {
 }
 
 fn create_aider_command(markdown: &str) -> Command {
+    let document = parse_document(markdown);
+
+    // TODO:
+    // document.to_aider_command()
+
     let mut cmd = Command::new("aider");
-
-    let document = extract_frontmatter(markdown);
-
-    // Add frontmatter as a separate argument if it's not empty
-    if !document.frontmatter.trim().is_empty() {
-        cmd.arg("--frontmatter").arg(document.frontmatter.trim());
-    }
 
     // Add the body as the main message
     cmd.arg("-m").arg(document.body.trim());
@@ -26,12 +28,7 @@ fn create_aider_command(markdown: &str) -> Command {
     cmd
 }
 
-struct Document<'a> {
-    frontmatter: &'a str,
-    body: &'a str,
-}
-
-fn extract_frontmatter(markdown: &str) -> Document {
+fn parse_document(markdown: &str) -> Document {
     // `markdown` will be a markdown document with a frontmatter section enclosed between two lines of three dashes
 
     let lines = markdown.lines();
