@@ -42,4 +42,18 @@ impl<'a> MarkdownDoc<'a> {
     }
 }
 
-// Add a unit test that reads in `src/fixtures/01_args.md`, calls MarkdownDoc::parse on it, and asserts that the returned frontmatter is `args: \n  - FUNCTION` AI!
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+
+    #[test]
+    fn test_parse_markdown_with_frontmatter() {
+        let markdown = fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
+        let doc = MarkdownDoc::parse(&markdown);
+        
+        assert!(doc.frontmatter.contains("args:"));
+        assert!(doc.frontmatter.contains("- FUNCTION"));
+        assert!(doc.body.contains("# Add unit tests for FUNCTION"));
+    }
+}
