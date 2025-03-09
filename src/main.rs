@@ -2,7 +2,6 @@ use std::fs;
 use std::process::Command;
 
 use command_template::CommandTemplate;
-use markdown_doc::MarkdownDoc;
 
 mod aider_command;
 mod command_template;
