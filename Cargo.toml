@@ -1,9 +1,14 @@
 [package]
 name = "aider-script"
 version = "0.1.0"
-description = "A CLI wrapper around aider to make calling reusable prompts convenient"
 edition = "2024"
+description = "A CLI wrapper around aider to make calling reusable prompts convenient"
+keywords = ["llm", "aider", "ai"]
+categories = ["command-line-utilities", "development-tools"]
 license = "MIT"
+authors = ["Sam Rowe"]
+homepage = "https://github.com/sgrowe/aider-script#readme"
+repository = "https://github.com/sgrowe/aider-script"
 
 
 [dependencies]
