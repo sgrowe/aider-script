@@ -22,6 +22,8 @@ impl<'a> CommandTemplate<'a> {
         let MarkdownDoc { frontmatter, body } = MarkdownDoc::parse(s);
 
         let mut argument_names = Vec::new();
+        let mut read_only = Vec::new();
+        let mut edit = Vec::new();
 
         if !frontmatter.trim().is_empty() {
             let docs = YamlLoader::load_from_str(frontmatter)?;
@@ -33,13 +35,30 @@ impl<'a> CommandTemplate<'a> {
                     }
                 }
             }
+
+            if let Some(read_files) = docs[0]["read"].as_vec() {
+                for file in read_files {
+                    if let Some(file_str) = file.as_str() {
+                        read_only.push(file_str.into());
+                    }
+                }
+            }
+
+            if let Some(edit_files) = docs[0]["edit"].as_vec() {
+                for file in edit_files {
+                    if let Some(file_str) = file.as_str() {
+                        edit.push(file_str.into());
+                    }
+                }
+            }
         }
 
         Ok(Self {
             argument_names,
             template_body: body,
             template_name: name,
-            // Add `read_only` and `edit` here, parsed from the YAML `read` and `edit` keys AI!
+            read_only,
+            edit,
         })
     }
 
@@ -70,7 +89,11 @@ impl<'a> CommandTemplate<'a> {
         // Render the template
         let rendered = tera.render(self.template_name, &context)?;
 
-        Ok(AiderCommand::message(rendered))
+        let mut command = AiderCommand::message(rendered);
+        command.read_only = self.read_only.clone();
+        command.edit = self.edit.clone();
+        
+        Ok(command)
     }
 }
 
@@ -87,6 +110,8 @@ mod tests {
         let doc = CommandTemplate::parse_with_name(&markdown, "01_args.md").unwrap();
 
         assert_eq!(doc.argument_names, vec!["FUNCTION"]);
+        assert_eq!(doc.read_only, vec!["src/str.rs", "src/args.rs"]);
+        assert_eq!(doc.edit, vec!["src/main.rs"]);
     }
 
     #[test]

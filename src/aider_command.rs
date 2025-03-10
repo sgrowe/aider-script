@@ -22,6 +22,16 @@ impl AiderCommand {
 
         cmd.arg("-m").arg(self.message.trim());
 
+        // Add read-only files
+        for file in &self.read_only {
+            cmd.arg("--read").arg(file);
+        }
+
+        // Add files to edit
+        for file in &self.edit {
+            cmd.arg("--edit").arg(file);
+        }
+
         cmd
     }
 }
@@ -33,17 +43,25 @@ mod tests {
     #[test]
     fn test_to_command() {
         let message = "Test message";
-        let command = AiderCommand::message(message);
+        let mut command = AiderCommand::message(message);
+        command.read_only = vec!["file1.rs".to_string(), "file2.rs".to_string()];
+        command.edit = vec!["file3.rs".to_string()];
 
         let cmd = command.to_shell_command();
 
         // Check that the program is "aider"
         assert_eq!(cmd.get_program(), "aider");
 
-        // Check that the args are ["-m", "Test message"]
+        // Check that the args include message, read-only files, and edit files
         let args: Vec<_> = cmd.get_args().collect();
-        assert_eq!(args.len(), 2);
+        assert_eq!(args.len(), 8);
         assert_eq!(args[0], "-m");
         assert_eq!(args[1], "Test message");
+        assert_eq!(args[2], "--read");
+        assert_eq!(args[3], "file1.rs");
+        assert_eq!(args[4], "--read");
+        assert_eq!(args[5], "file2.rs");
+        assert_eq!(args[6], "--edit");
+        assert_eq!(args[7], "file3.rs");
     }
 }
