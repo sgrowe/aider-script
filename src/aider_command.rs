@@ -3,9 +3,21 @@ use std::process::Command;
 #[derive(Debug)]
 pub struct AiderCommand {
     pub message: String,
+    /// File paths which will be passed as read-only to aider (using `--read`)
+    pub read_only: Vec<String>,
+    /// File paths to be edited by aider (passed using `--edit`)
+    pub edit: Vec<String>,
 }
 
 impl AiderCommand {
+    // This should take `Into<String>` AI!
+    pub fn message(message: String) -> Self {
+        AiderCommand {
+            message,
+            read_only: vec![],
+            edit: vec![],
+        }
+    }
     pub fn to_shell_command(&self) -> Command {
         let mut cmd = Command::new("aider");
 
@@ -22,9 +34,7 @@ mod tests {
     #[test]
     fn test_to_command() {
         let message = "Test message";
-        let command = AiderCommand {
-            message: message.to_string(),
-        };
+        let command = AiderCommand::message(message);
 
         let cmd = command.to_shell_command();
 
