@@ -64,7 +64,7 @@ impl<'a> CommandTemplate<'a> {
         // Render the template
         let rendered = tera.render(&self.template_name, &context)?;
 
-        Ok(AiderCommand { message: rendered })
+        Ok(AiderCommand::message(rendered))
     }
 }
 
