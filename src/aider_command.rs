@@ -10,10 +10,9 @@ pub struct AiderCommand {
 }
 
 impl AiderCommand {
-    // This should take `Into<String>` AI!
-    pub fn message(message: String) -> Self {
+    pub fn message<S: Into<String>>(message: S) -> Self {
         AiderCommand {
-            message,
+            message: message.into(),
             read_only: vec![],
             edit: vec![],
         }
