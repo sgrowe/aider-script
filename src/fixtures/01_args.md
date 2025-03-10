@@ -1,6 +1,11 @@
 ---
 args:
   - FUNCTION
+read:
+  - "src/str.rs"
+  - "src/args.rs"
+edit:
+  - "src/main.rs"
 ---
 
 # Add unit tests for {{ FUNCTION }}
