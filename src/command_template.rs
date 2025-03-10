@@ -53,7 +53,7 @@ impl<'a> CommandTemplate<'a> {
 
         // Create a Tera instance with a single template
         let mut tera = Tera::default();
-        tera.add_raw_template(&self.template_name, self.template_body)?;
+        tera.add_raw_template(self.template_name, self.template_body)?;
 
         // Create context with variables
         let mut context = Context::new();
@@ -62,7 +62,7 @@ impl<'a> CommandTemplate<'a> {
         }
 
         // Render the template
-        let rendered = tera.render(&self.template_name, &context)?;
+        let rendered = tera.render(self.template_name, &context)?;
 
         Ok(AiderCommand::message(rendered))
     }
