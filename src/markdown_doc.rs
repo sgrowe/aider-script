@@ -67,7 +67,10 @@ mod tests {
             fs::read_to_string("src/fixtures/01_args.md").expect("Failed to read fixture file");
         let doc = MarkdownDoc::parse(&markdown);
 
-        assert_eq!(doc.frontmatter, "args:\n  - FUNCTION\nread:\n  - \"src/str.rs\"\n  - \"src/args.rs\"\nedit:\n  - \"src/main.rs\"");
+        assert_eq!(
+            doc.frontmatter,
+            "args:\n  - FUNCTION\nread:\n  - \"src/str.rs\"\n  - \"src/args.rs\"\nedit:\n  - \"src/main.rs\""
+        );
 
         assert!(doc.body.starts_with("# Add unit tests for {{ FUNCTION }}"));
     }

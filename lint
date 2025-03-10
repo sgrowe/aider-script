@@ -5,4 +5,4 @@
 # This script runs cargo clippy with the --fix option.
 # Any arguments passed to this script are ignored.
 
-cargo clippy --fix
+cargo fmt && cargo clippy --fix --allow-dirty

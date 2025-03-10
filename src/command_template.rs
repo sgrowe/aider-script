@@ -92,7 +92,7 @@ impl<'a> CommandTemplate<'a> {
         let mut command = AiderCommand::message(rendered);
         command.read_only = self.read_only.clone();
         command.edit = self.edit.clone();
-        
+
         Ok(command)
     }
 }
