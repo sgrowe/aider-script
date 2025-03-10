@@ -10,6 +10,11 @@ pub struct CommandTemplate<'a> {
     argument_names: Vec<String>,
     template_body: &'a str,
     template_name: &'a str,
+
+    /// File paths which will be passed as read-only to aider (using `--read`)
+    read_only: Vec<String>,
+    /// File paths to be edited by aider (passed using `--edit`)
+    edit: Vec<String>,
 }
 
 impl<'a> CommandTemplate<'a> {
@@ -34,6 +39,7 @@ impl<'a> CommandTemplate<'a> {
             argument_names,
             template_body: body,
             template_name: name,
+            // Add `read_only` and `edit` here, parsed from the YAML `read` and `edit` keys AI!
         })
     }
 
