@@ -83,7 +83,7 @@ These are all optional.
 
 Make sure you've installed and set up [aider][] first.
 
-Install using Cargo:
+Install using [Cargo][cargo-install]:
 
 ```bash
 cargo install aider-script
@@ -95,3 +95,4 @@ Contributions are welcome! Please submit pull requests or open issues on the Git
 
 [aider]: https://github.com/Aider-AI/aider
 [tera]: https://keats.github.io/tera/
+[cargo-install]: https://doc.rust-lang.org/cargo/getting-started/installation.html
