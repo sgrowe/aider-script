@@ -10,6 +10,7 @@ authors = ["Sam Rowe"]
 homepage = "https://github.com/sgrowe/aider-script#readme"
 repository = "https://github.com/sgrowe/aider-script"
 
+exclude = [".aider.conf.yml", "CLAUDE.md", "conventions.md", "lint"]
 
 [dependencies]
 anyhow = "1.0"
