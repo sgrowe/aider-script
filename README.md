@@ -7,6 +7,14 @@ aider-script is a command-line tool that streamlines using [aider][] for common 
 - Specify in your template which files should automatically be loaded into context when running the prompt
 - Commit the prompt templates to your repo to share and refine them over time
 
+**Table of Contents**
+
+- [Usage](#usage)
+- [Template Syntax](#template-syntax)
+- [Frontmatter Configuration](#frontmatter-configuration)
+- [Installation](#installation)
+- [Contributing](#contributing)
+
 ## Usage
 
 ### Basic Usage
@@ -67,7 +75,7 @@ Generated message:
 
 ## Template Syntax
 
-Templates use [tera][] templating syntax. You can use variables from template arguments in your markdown.
+Templates use [tera][] templating syntax (see the [example above](#example-template)). You can use variables from template arguments in your markdown.
 
 ## Frontmatter Configuration
 
