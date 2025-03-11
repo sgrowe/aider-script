@@ -83,7 +83,7 @@ impl<'a> CommandTemplate<'a> {
         // Create context with variables
         let mut context = Context::new();
         for (name, value) in self.argument_names.iter().zip(args) {
-            context.insert(name, &value.as_ref());
+            context.insert(name, value.as_ref());
         }
 
         // Render the template
@@ -94,7 +94,7 @@ impl<'a> CommandTemplate<'a> {
         // Apply templating to read_only and edit file paths
         let read_only = self
             .read_only
-            .iter()
+            .iter() // extract this `.map` and the one below into a shared helper method AI!
             .map(|path| tera.render_str(path, &context))
             .collect::<Result<Vec<_>, _>>()?;
 
