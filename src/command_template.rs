@@ -91,9 +91,21 @@ impl<'a> CommandTemplate<'a> {
 
         let mut command = AiderCommand::message(rendered);
 
-        // The strings in `read_only` and `edit` should be templated using `tera` as well AI!
-        command.read_only = self.read_only.clone();
-        command.edit = self.edit.clone();
+        // Apply templating to read_only and edit file paths
+        let mut read_only = Vec::new();
+        for path in &self.read_only {
+            let rendered_path = tera.render_str(path, &context)?;
+            read_only.push(rendered_path);
+        }
+        
+        let mut edit = Vec::new();
+        for path in &self.edit {
+            let rendered_path = tera.render_str(path, &context)?;
+            edit.push(rendered_path);
+        }
+        
+        command.read_only = read_only;
+        command.edit = edit;
 
         Ok(command)
     }
@@ -162,5 +174,24 @@ fn test_my_func_1_does_X() {
 
 Now implement those unit tests"
         )
+    }
+
+    #[test]
+    fn test_templates_file_paths() {
+        let markdown = r#"---
+args:
+  - FUNCTION
+read:
+  - "src/{{ FUNCTION }}.rs"
+edit:
+  - "src/{{ FUNCTION }}_test.rs"
+---
+Test template"#;
+
+        let doc = CommandTemplate::parse_with_name(markdown, "test_template").unwrap();
+        let cmd = doc.apply_args(&["utils"]).unwrap();
+
+        assert_eq!(cmd.read_only, vec!["src/utils.rs"]);
+        assert_eq!(cmd.edit, vec!["src/utils_test.rs"]);
     }
 }
