@@ -1,11 +1,13 @@
 # aider-script
 
-aider-script is a command-line tool that streamlines using [aider][] for common tasks, by allowing you to use reusable prompts with templating.
+aider-script is a CLI tool that streamlines using [aider][] for common tasks, by allowing you to use reusable prompts templates which support being passed arguments when run.
 
 - Define reusable prompt templates in Markdown
 - Use variables in your prompt templates
 - Specify in your template which files should automatically be loaded into context when running the prompt
-- Commit the prompt templates to your repo to share and refine them over time
+- Commit the prompt templates to your repo to share with your team and refine them over time
+
+For example you might have a template which adds an API route to your backend server, and it could take the URL pattern as an argument. You might have another template to add unit tests for a React component given the component name, and another which generates mock data for a third-party API call given the object schema name.
 
 **Table of Contents**
 
