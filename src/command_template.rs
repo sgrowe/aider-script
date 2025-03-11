@@ -97,13 +97,13 @@ impl<'a> CommandTemplate<'a> {
             let rendered_path = tera.render_str(path, &context)?;
             read_only.push(rendered_path);
         }
-        
+
         let mut edit = Vec::new();
         for path in &self.edit {
             let rendered_path = tera.render_str(path, &context)?;
             edit.push(rendered_path);
         }
-        
+
         command.read_only = read_only;
         command.edit = edit;
 
