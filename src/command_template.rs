@@ -90,6 +90,8 @@ impl<'a> CommandTemplate<'a> {
         let rendered = tera.render(self.template_name, &context)?;
 
         let mut command = AiderCommand::message(rendered);
+
+        // The strings in `read_only` and `edit` should be templated using `tera` as well AI!
         command.read_only = self.read_only.clone();
         command.edit = self.edit.clone();
 
