@@ -92,18 +92,15 @@ impl<'a> CommandTemplate<'a> {
         let mut command = AiderCommand::message(rendered);
 
         // Apply templating to read_only and edit file paths
-        let mut read_only = Vec::new();
-        for path in &self.read_only {
-            // use `.map()` instead AI!
-            let rendered_path = tera.render_str(path, &context)?;
-            read_only.push(rendered_path);
-        }
+        let read_only = self.read_only
+            .iter()
+            .map(|path| tera.render_str(path, &context))
+            .collect::<Result<Vec<_>, _>>()?;
 
-        let mut edit = Vec::new();
-        for path in &self.edit {
-            let rendered_path = tera.render_str(path, &context)?;
-            edit.push(rendered_path);
-        }
+        let edit = self.edit
+            .iter()
+            .map(|path| tera.render_str(path, &context))
+            .collect::<Result<Vec<_>, _>>()?;
 
         command.read_only = read_only;
         command.edit = edit;
