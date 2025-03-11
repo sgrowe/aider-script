@@ -3,16 +3,35 @@ name: Cargo Build & Test
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build_and_test:
-    name: Build and test
+    name: Build, test and publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Ensure we fetch the previous commit for the publish step
+
       - run: rustup update stable && rustup default stable
+
       - run: cargo build --verbose
+
       - run: cargo test --verbose
+
+      - name: Check if version has changed
+        id: check_version
+        run: |
+          if git diff HEAD~1 HEAD -- Cargo.toml | grep '^[+-]version = '; then
+            echo "changed=true" >> $GITHUB_ENV
+          else
+            echo "changed=false" >> $GITHUB_ENV
+          fi
+
+      - name: Publish to crates.io
+        if: env.changed == 'true'
+        run: cargo publish
