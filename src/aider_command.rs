@@ -5,7 +5,7 @@ pub struct AiderCommand {
     pub message: String,
     /// File paths which will be passed as read-only to aider (using `--read`)
     pub read_only: Vec<String>,
-    /// File paths to be edited by aider (passed using `--edit`)
+    /// File paths to be edited by aider (passed using `--file`)
     pub edit: Vec<String>,
 }
 
@@ -29,7 +29,7 @@ impl AiderCommand {
 
         // Add files to edit
         for file in &self.edit {
-            cmd.arg("--edit").arg(file);
+            cmd.arg("--file").arg(file);
         }
 
         cmd
@@ -61,7 +61,7 @@ mod tests {
         assert_eq!(args[3], "file1.rs");
         assert_eq!(args[4], "--read");
         assert_eq!(args[5], "file2.rs");
-        assert_eq!(args[6], "--edit");
+        assert_eq!(args[6], "--file");
         assert_eq!(args[7], "file3.rs");
     }
 }

@@ -13,7 +13,7 @@ pub struct CommandTemplate<'a> {
 
     /// File paths which will be passed as read-only to aider (using `--read`)
     read_only: Vec<String>,
-    /// File paths to be edited by aider (passed using `--edit`)
+    /// File paths to be edited by aider (passed using `--file`)
     edit: Vec<String>,
 }
 
