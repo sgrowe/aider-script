@@ -65,7 +65,7 @@ impl<'a> CommandTemplate<'a> {
     fn render_paths(
         &self,
         paths: &[String],
-        tera: &Tera,
+        tera: &mut Tera,
         context: &Context,
     ) -> anyhow::Result<Vec<String>> {
         Ok(paths
@@ -104,8 +104,8 @@ impl<'a> CommandTemplate<'a> {
         let mut command = AiderCommand::message(rendered);
 
         // Apply templating to read_only and edit file paths
-        command.read_only = self.render_paths(&self.read_only, &tera, &context)?;
-        command.edit = self.render_paths(&self.edit, &tera, &context)?;
+        command.read_only = self.render_paths(&self.read_only, &mut tera, &context)?;
+        command.edit = self.render_paths(&self.edit, &mut tera, &context)?;
 
         Ok(command)
     }
