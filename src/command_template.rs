@@ -68,10 +68,10 @@ impl<'a> CommandTemplate<'a> {
         tera: &Tera,
         context: &Context,
     ) -> anyhow::Result<Vec<String>> {
-        paths
+        Ok(paths
             .iter()
             .map(|path| tera.render_str(path, context))
-            .collect::<Result<Vec<_>, _>>()
+            .collect::<Result<Vec<_>, _>>()?)
     }
 
     pub fn apply_args<T>(&self, args: &[T]) -> anyhow::Result<AiderCommand>
