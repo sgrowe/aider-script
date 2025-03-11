@@ -94,6 +94,7 @@ impl<'a> CommandTemplate<'a> {
         // Apply templating to read_only and edit file paths
         let mut read_only = Vec::new();
         for path in &self.read_only {
+            // use `.map()` instead AI!
             let rendered_path = tera.render_str(path, &context)?;
             read_only.push(rendered_path);
         }
