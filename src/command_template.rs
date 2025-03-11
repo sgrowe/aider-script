@@ -62,7 +62,12 @@ impl<'a> CommandTemplate<'a> {
         })
     }
 
-    fn render_paths(&self, paths: &[String], tera: &Tera, context: &Context) -> anyhow::Result<Vec<String>> {
+    fn render_paths(
+        &self,
+        paths: &[String],
+        tera: &Tera,
+        context: &Context,
+    ) -> anyhow::Result<Vec<String>> {
         paths
             .iter()
             .map(|path| tera.render_str(path, context))
