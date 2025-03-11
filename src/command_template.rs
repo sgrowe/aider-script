@@ -62,18 +62,6 @@ impl<'a> CommandTemplate<'a> {
         })
     }
 
-    fn render_paths(
-        &self,
-        paths: &[String],
-        tera: &mut Tera,
-        context: &Context,
-    ) -> anyhow::Result<Vec<String>> {
-        Ok(paths
-            .iter()
-            .map(|path| tera.render_str(path, context))
-            .collect::<Result<Vec<_>, _>>()?)
-    }
-
     pub fn apply_args<T>(&self, args: &[T]) -> anyhow::Result<AiderCommand>
     where
         T: AsRef<str> + Debug,
@@ -104,11 +92,22 @@ impl<'a> CommandTemplate<'a> {
         let mut command = AiderCommand::message(rendered);
 
         // Apply templating to read_only and edit file paths
-        command.read_only = self.render_paths(&self.read_only, &mut tera, &context)?;
-        command.edit = self.render_paths(&self.edit, &mut tera, &context)?;
+        command.read_only = render_strings(&self.read_only, &mut tera, &context)?;
+        command.edit = render_strings(&self.edit, &mut tera, &context)?;
 
         Ok(command)
     }
+}
+
+fn render_strings<P>(paths: P, tera: &mut Tera, context: &Context) -> tera::Result<Vec<String>>
+where
+    P: IntoIterator,
+    P::Item: AsRef<str>,
+{
+    paths
+        .into_iter()
+        .map(|path| tera.render_str(path.as_ref(), context))
+        .collect()
 }
 
 #[cfg(test)]
