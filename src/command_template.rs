@@ -79,7 +79,7 @@ impl<'a> CommandTemplate<'a> {
         // Create a Tera instance with a single template
         let mut tera = Tera::default();
         tera.add_raw_template(self.template_name, self.template_body)?;
-        
+
         // Register our case conversion filters
         tera.register_filter("kebab", filters::KebabFilter);
         tera.register_filter("pascal", filters::PascalFilter);
