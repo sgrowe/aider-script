@@ -79,6 +79,32 @@ Generated message:
 
 Templates use [tera][] templating syntax (see the [example above](#example-template)). You can use variables from template arguments in your markdown.
 
+### Case Conversion Filters
+
+aider-script provides several case conversion filters to transform strings:
+
+| Filter   | Example output |
+| -------- | -------------- |
+| `camel`  | `fooBarBaz`    |
+| `pascal` | `FooBarBaz`    |
+| `kebab`  | `foo-bar-baz`  |
+| `snake`  | `foo_bar_baz`  |
+
+Example usage:
+
+```markdown
+Create a file called `{{ name | kebab }}.tsx` that exports a component called `{{ name | pascal }}`.
+```
+
+Tera also provides several built-in casing filters:
+
+- `upper`: Converts a string to UPPERCASE
+- `lower`: Converts a string to lowercase
+- `title`: Capitalizes each word inside a sentence
+- `capitalize`: Returns the string with all its characters lowercased apart from the first char which is uppercased
+
+See the [Tera documentation](https://keats.github.io/tera/docs/#built-ins) for more details.
+
 ## Frontmatter Configuration
 
 The template's frontmatter can specify:
