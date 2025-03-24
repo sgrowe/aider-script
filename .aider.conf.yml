@@ -241,12 +241,8 @@ auto-test: true
 # Other settings:
 
 ## specify a file to edit (can be used multiple times)
-#file: xxx
-## Specify multiple values like this:
-#file:
-#  - xxx
-#  - yyy
-#  - zzz
+file:
+  - "src/main.rs" # Whenever you add a new module you have to list it with `mod module;`
 
 ## specify a read-only file (can be used multiple times)
 read:
