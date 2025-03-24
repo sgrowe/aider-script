@@ -57,7 +57,7 @@ edit:
 
 # Generate mock data for {{ QUERY_NAME }}
 
-Inspect the type definition for {{ QUERY_NAME }} and create some...
+Create a new file called `src/mocks/{{ QUERY_NAME | kebab }}.ts`. Add a new mock response object that matches the type definition for {{ QUERY_NAME }}.
 ```
 
 ### Running the Template
