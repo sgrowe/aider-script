@@ -7,6 +7,7 @@ use command_template::CommandTemplate;
 mod aider_command;
 mod args;
 mod command_template;
+mod filters;
 mod markdown_doc;
 mod str;
 
