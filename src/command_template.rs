@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use tera::{Context, Tera};
 use yaml_rust2::YamlLoader;
 
-use crate::{aider_command::AiderCommand, markdown_doc::MarkdownDoc};
+use crate::{aider_command::AiderCommand, filters, markdown_doc::MarkdownDoc};
 
 #[derive(Debug)]
 pub struct CommandTemplate<'a> {
@@ -79,6 +79,12 @@ impl<'a> CommandTemplate<'a> {
         // Create a Tera instance with a single template
         let mut tera = Tera::default();
         tera.add_raw_template(self.template_name, self.template_body)?;
+        
+        // Register our case conversion filters
+        tera.register_filter("kebab", filters::KebabFilter);
+        tera.register_filter("pascal", filters::PascalFilter);
+        tera.register_filter("camel", filters::CamelFilter);
+        tera.register_filter("snake", filters::SnakeFilter);
 
         // Create context with variables
         let mut context = Context::new();
