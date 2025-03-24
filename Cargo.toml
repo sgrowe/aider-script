@@ -1,6 +1,6 @@
 [package]
 name = "aider-script"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2024"
 description = "A CLI wrapper around aider to make calling reusable prompts convenient"
 keywords = ["llm", "aider", "ai"]
