@@ -11,11 +11,21 @@ For example you might have a template which adds an API route to your backend se
 
 **Table of Contents**
 
+- [Installation](#installation)
 - [Usage](#usage)
 - [Template Syntax](#template-syntax)
+  - [Case Conversion Filters](#case-conversion-filters)
 - [Frontmatter Configuration](#frontmatter-configuration)
-- [Installation](#installation)
-- [Contributing](#contributing)
+
+## Installation
+
+Make sure you've installed and set up [aider][] first.
+
+Install using [Cargo][cargo-install]:
+
+```bash
+cargo install aider-script
+```
 
 ## Usage
 
@@ -114,20 +124,6 @@ The template's frontmatter can specify:
 - `edit`: Files to be edited by aider
 
 These are all optional.
-
-## Installation
-
-Make sure you've installed and set up [aider][] first.
-
-Install using [Cargo][cargo-install]:
-
-```bash
-cargo install aider-script
-```
-
-## Contributing
-
-Contributions are welcome! Please submit pull requests or open issues on the GitHub repository.
 
 [aider]: https://github.com/Aider-AI/aider
 [tera]: https://keats.github.io/tera/
