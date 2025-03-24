@@ -41,6 +41,6 @@ impl Args {
 
         let name = file_name.to_str()?;
 
-        return Some(name);
+        Some(name)
     }
 }
