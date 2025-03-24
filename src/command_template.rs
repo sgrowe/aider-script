@@ -193,4 +193,25 @@ Test template"#;
         assert_eq!(cmd.read_only, vec!["src/utils.rs"]);
         assert_eq!(cmd.edit, vec!["src/utils_test.rs"]);
     }
+
+    #[test]
+    fn test_casing_filters() {
+        let markdown = fs::read_to_string("src/fixtures/02_casing_filters.md")
+            .expect("Failed to read fixture file");
+
+        let doc = CommandTemplate::parse_with_name(&markdown, "02_casing_filters.md").unwrap();
+
+        let cmd = doc.apply_args(&["myQueryName"]).unwrap();
+
+        assert_eq!(
+            cmd.message,
+            "
+- Create a new file called `src/component/my-query-name.tsx`
+- Add a React component in that file which calls the `useMyQueryNameQuery()` hook and renders the result
+- Render some text above the result saying \"Response from myQueryName\"
+
+Snake case for the hell of it: my_query_name
+".trim()
+        )
+    }
 }
