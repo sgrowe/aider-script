@@ -2,6 +2,8 @@ name: Cargo Build & Test
 
 on:
   push:
+    branches:
+      - main
   pull_request:
   workflow_dispatch:
 
@@ -33,16 +35,17 @@ jobs:
           fi
 
       - name: Tag the release
-        if: github.ref == 'refs/heads/ci_update'
-        # if: env.changed == 'true'
+        if: github.ref == 'refs/heads/main' && env.changed == 'true'
         run: |
           version=$(grep '^version\s*=' Cargo.toml | sed -E 's/version[[:space:]]*=[[:space:]]*"(.*)"/\1/')
-          echo "Version: $version"
-      # git tag -a v$version -m "Release v$version"
-      # git push origin v$version
 
-      # - name: Publish to crates.io
-      #   if: env.changed == 'true'
-      #   run: cargo publish
-      #   env:
-      #     CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          echo "Tagging version: $version"
+
+          git tag -a v$version -m "Release v$version"
+          git push origin v$version
+
+      - name: Publish to crates.io
+        if: github.ref == 'refs/heads/main' && env.changed == 'true'
+        run: cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
